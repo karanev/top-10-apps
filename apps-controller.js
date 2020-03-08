@@ -22,7 +22,21 @@ apps_controller.getTopTenApps = async function (req, res) {
     res.send ({data : top_ten_apps});
 };
 
-apps_controller.getAppDetails = function (req, res) {
+apps_controller.getAppDetails = async function (req, res) {
+    const app_id = req.query.id;
+
+    if (!app_id)
+        return res.send ({ err : 'BAD_REQUEST', message : 'Request query parameter id is required' });
+    
+    let app_detail;
+    try {
+        app_detail = await model.getByAppId (app_id);
+    } catch (err) {
+        console.error ({err : err, message : err.message, stack : err.stack});
+        return res.send ({err : err, message : err.message});
+    }
+
+    res.send ({ data : app_detail });
 };
 
 apps_controller.refreshDB = async function (req, res) {
@@ -52,7 +66,7 @@ apps_controller.refreshDB = async function (req, res) {
     */
     const $ = cheerio.load (top_apps.data);
     const apps_data  = $('div.vU6FJ.p63iDd').map (function (index, divName) {
-        let app_id   = parse_id_from_url ($('a.JC71ub', this).attr ('href'));
+        let app_id   = parseIdFromUrl ($('a.JC71ub', this).attr ('href'));
         let app_data = { id : app_id, rank : index + 1, name : $('div.WsMG1c.nnK0zc', this).text () }
 
         return app_data;
@@ -72,7 +86,7 @@ apps_controller.refreshDB = async function (req, res) {
     res.send ({data : apps_data});
 };
 
-parse_id_from_url = function (url) {
+parseIdFromUrl = function (url) {
     let __url = new URL (url, 'https://play.google.com/');
     return __url.searchParams.get ('id');
 };

@@ -24,6 +24,15 @@ model.getTopTenApps = async function () {
     return response;
 }
 
+model.getByAppId = async function (app_id) {
+    if (!Model)
+        throw new Error ('DB not ready yet');
+    
+    const response = await Model.findOne ({ id : app_id }).exec ();
+
+    return response;
+}
+
 model.removeRanks = async function () {
     if (!Model)
         throw new Error ('DB not ready yet');

@@ -11,7 +11,7 @@ const app             = express ();
 app.get ('/',           apps_controller.getTopTenApps);
 app.get ('/appdetails', apps_controller.getAppDetails);
 
-app.get ('/refresh',    apps_controller.refreshDB);
+app.put ('/refresh',    apps_controller.refreshDB);
 
 const port    = process.env.PORT || 3000;
 app.listen (port, () => console.log (`App listening on port ${port}`));
