@@ -74,7 +74,7 @@ apps_controller.refreshDB = async function (req, res) {
 
     for (const app_data of apps_data) {
         // TODO
-        // user bulkWrite to update in one batch
+        // use bulkWrite to update in one batch
         try {
             await model.upsertByAppId (app_data.id, app_data);
         } catch (err) {
